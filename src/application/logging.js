@@ -3,5 +3,5 @@ import winston from "winston";
 export const logger = winston.createLogger({
   level: "info",
   format: winston.format.json(),
-  transports: [new winston.Transport.Console({})],
+  transports: [new winston.transports.Console({})],
 });
