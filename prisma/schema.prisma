@@ -12,7 +12,23 @@ model User{
     password String @db.VarChar(100)
     name String @db.VarChar(100)
     token String? @db.VarChar(100)
+    address Address[]
 
     @@map("users")
 
+}
+
+model Address{
+    id Int @id @default(autoincrement())
+    name String @db.VarChar(100)
+    street String @db.VarChar(350)
+    city String @db.VarChar(100)
+    province String @db.VarChar(100)
+    postal_code String @db.VarChar(100)
+    phone String @db.VarChar(50)
+    username String @db.VarChar(100)
+    status Boolean @default(false)
+    user User @relation(fields: [username], references: [username])
+
+    @@map("addresses")
 }
