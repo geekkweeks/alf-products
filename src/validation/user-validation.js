@@ -11,4 +11,7 @@ const loginUserValidation = Joi.object({
   password: Joi.string().max(100).required(),
 });
 
-export { registerUserValidation, loginUserValidation };
+// search user by username or name
+const getUserValidation = Joi.string().min(3).max(100);
+
+export { registerUserValidation, loginUserValidation, getUserValidation };

@@ -70,4 +70,31 @@ const login = async (request) => {
   });
 };
 
-export default { register, login };
+const get = async (search) => {
+  const users = await prismaClient.user.findMany({
+    where: {
+      OR: [
+        {
+          username: {
+            startsWith: search,
+          },
+        },
+        {
+          username: {
+            endsWith: search,
+          },
+        },
+      ],
+    },
+    select: {
+      username: true,
+      name: true,
+    },
+  });
+
+  if (!users) throw new ResponseError(404, "User not found");
+
+  return users;
+};
+
+export default { register, login, get };
