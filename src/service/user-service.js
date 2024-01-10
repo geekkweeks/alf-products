@@ -1,12 +1,12 @@
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/error-response.js";
 import {
+  getUserValidation,
   loginUserValidation,
   registerUserValidation,
 } from "../validation/user-validation.js";
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
-import { v4 as uuid } from "uuid";
 import jwt from "jsonwebtoken";
 
 const register = async (request) => {
@@ -64,6 +64,9 @@ const login = async (request) => {
 };
 
 const get = async (search) => {
+  if (search.length < 3)
+    throw new ResponseError("400", "Minimum 3 chars for searching!!!");
+
   const users = await prismaClient.user.findMany({
     where: {
       OR: [
