@@ -24,3 +24,4 @@ app.get("/product/:productId/category/:categoryId", (req, res) => {
 app.listen("5000", () => {
   console.log("hi there");
 });
+

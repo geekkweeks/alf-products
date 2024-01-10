@@ -7,6 +7,7 @@ import {
 import { validate } from "../validation/validation.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
+import jwt from "jsonwebtoken";
 
 const register = async (request) => {
   // user validation
@@ -55,19 +56,11 @@ const login = async (request) => {
   if (!isPasswordMatch)
     throw new ResponseError(401, "Username or password wrong");
 
-  const userToken = uuid().toString();
-
-  return prismaClient.user.update({
-    data: {
-      token: userToken,
-    },
-    where: {
-      username: user.username,
-    },
-    select: {
-      token: true,
-    },
+  const userToken = jwt.sign({ username: user.username }, process.env.JWT_KEY, {
+    expiresIn: "1h",
   });
+
+  return userToken;
 };
 
 const get = async (search) => {
@@ -92,7 +85,8 @@ const get = async (search) => {
     },
   });
 
-  if (!users) throw new ResponseError(404, "User not found");
+  if (!users || users.length === 0)
+    throw new ResponseError(404, "User not found");
 
   return users;
 };

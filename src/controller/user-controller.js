@@ -1,3 +1,4 @@
+import { Console } from "console";
 import userService from "../service/user-service.js";
 
 const register = async (req, res, next) => {
@@ -23,8 +24,9 @@ const login = async (req, res, next) => {
 
 const get = async (req, res, next) => {
   try {
-    const input = "TODO";
-    const result = await userService.get(input);
+    if (!req.query.search) throw new Error("Invalid search");
+
+    const result = await userService.get(req.query.search);
     res.status(200).json({
       data: result,
     });
