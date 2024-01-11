@@ -1,7 +1,6 @@
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/error-response.js";
 import {
-  getUserValidation,
   loginUserValidation,
   registerUserValidation,
 } from "../validation/user-validation.js";
@@ -65,7 +64,7 @@ const login = async (request) => {
 
 const get = async (search) => {
   if (search.length < 3)
-    throw new ResponseError("400", "Minimum 3 chars for searching!!!");
+    throw new ResponseError(400, "Minimum 3 chars for searching!!!");
 
   const users = await prismaClient.user.findMany({
     where: {
@@ -77,6 +76,16 @@ const get = async (search) => {
         },
         {
           username: {
+            endsWith: search,
+          },
+        },
+        {
+          name: {
+            startsWith: search,
+          },
+        },
+        {
+          name: {
             endsWith: search,
           },
         },
