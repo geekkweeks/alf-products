@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 const authMiddleware = async (req, res, next) => {
   try {
+    console.log(req.body);
     let token = req.get("Authorization");
 
     // token value: Bearer xxxxx. To verify need to be splitted

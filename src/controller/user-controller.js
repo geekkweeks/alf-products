@@ -12,6 +12,7 @@ const register = async (req, res, next) => {
   }
 };
 const login = async (req, res, next) => {
+  console.log("login");
   try {
     const result = await userService.login(req.body);
     res.status(200).json({
@@ -24,9 +25,18 @@ const login = async (req, res, next) => {
 
 const get = async (req, res, next) => {
   try {
+    const result = await userService.get();
+    res.status(200).json({
+      data: result,
+    });
+  } catch (err) {}
+};
+
+const find = async (req, res, next) => {
+  try {
     if (!req.query.search) throw new Error("Invalid search");
 
-    const result = await userService.get(req.query.search);
+    const result = await userService.findUser(req.query.search);
     res.status(200).json({
       data: result,
     });
@@ -39,4 +49,5 @@ export default {
   register,
   login,
   get,
+  find,
 };

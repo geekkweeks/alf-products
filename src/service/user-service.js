@@ -62,7 +62,20 @@ const login = async (request) => {
   return userToken;
 };
 
-const get = async (search) => {
+const get = async () => {
+  const users = await prismaClient.user.findMany({
+    select: {
+      username: true,
+      name: true,
+    },
+  });
+  if (!users || users.length === 0)
+    return new ResponseError(404, "Users not found");
+
+  return users;
+};
+
+const findUser = async (search) => {
   if (search.length < 3)
     throw new ResponseError(400, "Minimum 3 chars for searching!!!");
 
@@ -103,4 +116,4 @@ const get = async (search) => {
   return users;
 };
 
-export default { register, login, get };
+export default { register, login, findUser, get };
