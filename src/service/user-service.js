@@ -35,6 +35,8 @@ const register = async (request) => {
 };
 
 const login = async (request) => {
+  const cookies = request.cookies;
+
   const loginRequest = validate(loginUserValidation, request);
 
   const user = await prismaClient.user.findUnique({
@@ -55,11 +57,47 @@ const login = async (request) => {
   if (!isPasswordMatch)
     throw new ResponseError(401, "Username or password wrong");
 
-  const userToken = jwt.sign({ username: user.username }, process.env.JWT_KEY, {
-    expiresIn: "1h",
-  });
+  // generate new token
+  const accessToken = jwt.sign(
+    { userInfo: { username: user.username, roles: [] } },
+    process.env.JWT_KEY,
+    {
+      expiresIn: "60000", // in 1 min
+    }
+  );
 
-  return userToken;
+  const refreshAccessToken = jwt.sign(
+    { userInfo: { username: user.username, roles: [] } },
+    process.env.JWT_KEY,
+    {
+      expiresIn: "120000", // in 2 min
+    }
+  );
+  const res = {
+    username: user.username,
+    accessToken,
+    refreshAccessToken,
+  };
+  return res;
+};
+
+const refresh = async (req) => {
+  const refreshToken = req.cookies["refreshToken"];
+  if (!refreshToken) return new ResponseError(401, "Invalid token");
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_KEY);
+    const accessToken = jwt.sign(
+      { userInfo: { username: user.username, roles: [] } },
+      process.env.JWT_KEY,
+      {
+        expiresIn: "60000", // in 1 min
+      }
+    );
+    return accessToken;
+  } catch (err) {
+    return new ResponseError(401, "Invalid token");
+  }
 };
 
 const get = async () => {
@@ -116,4 +154,4 @@ const findUser = async (search) => {
   return users;
 };
 
-export default { register, login, findUser, get };
+export default { register, login, refresh, findUser, get };

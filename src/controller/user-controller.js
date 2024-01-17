@@ -12,14 +12,30 @@ const register = async (req, res, next) => {
   }
 };
 const login = async (req, res, next) => {
-  console.log("login");
   try {
     const result = await userService.login(req.body);
-    res.status(200).json({
-      data: result,
-    });
+
+    res
+      .cookie("refreshToken", result?.refreshAccessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .header("Authorization", result?.accessToken)
+      .status(200)
+      .json({ username: result?.username, accessToken: result?.accessToken });
   } catch (e) {
     next(e);
+  }
+};
+
+const refresh = async (req, res, next) => {
+  try {
+    const result = await userService.refresh(req);
+    res.header("Authorization", result?.accessToken);
+  } catch (err) {
+    next(err);
   }
 };
 

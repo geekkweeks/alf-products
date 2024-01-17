@@ -1,10 +1,17 @@
 import { prismaClient } from "../application/database.js";
 import jwt from "jsonwebtoken";
+import allowedOrigins from "../config/allowed-origins.js";
 
 const authMiddleware = async (req, res, next) => {
   try {
-    console.log(req.body);
     let token = req.get("Authorization");
+    let refreshToken = req.cookies["refreshToken"];
+
+    if (!token || !refreshToken)
+      res
+        .status(401)
+        .json({ errors: "Access denied. No Token provided" })
+        .end();
 
     // token value: Bearer xxxxx. To verify need to be splitted
     token = token.split(" ")[1];
