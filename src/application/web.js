@@ -11,6 +11,7 @@ export const web = express();
 
 web.use(express.json());
 
+// ref: https://github1s.com/gitdagray/nodejs_jwt_auth
 // Handle options credentials check - before CORS!
 // and fetch cookies credentials requirement
 web.use(credentials);
