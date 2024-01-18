@@ -1,4 +1,4 @@
-import { Console } from "console";
+import { Console, error } from "console";
 import userService from "../service/user-service.js";
 
 const register = async (req, res, next) => {
@@ -45,7 +45,22 @@ const get = async (req, res, next) => {
     res.status(200).json({
       data: result,
     });
-  } catch (err) {}
+  } catch (err) {
+    next(err);
+  }
+};
+
+const isUserExist = async (req, res, next) => {
+  try {
+    console.log("query: ", req.query);
+    const paramValue = req.param("username");
+    if (!paramValue) throw new Error("Invalid param");
+
+    const result = await userService.isUserExist(paramValue);
+    res.status(200).json({ data: result });
+  } catch (err) {
+    next(err);
+  }
 };
 
 const find = async (req, res, next) => {
@@ -66,4 +81,5 @@ export default {
   login,
   get,
   find,
+  isUserExist,
 };

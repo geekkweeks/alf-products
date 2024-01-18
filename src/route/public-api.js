@@ -7,5 +7,5 @@ const publicRouter = new express.Router();
 publicRouter.use(credentials);
 publicRouter.post("/api/users/register", userController.register);
 publicRouter.post("/api/users/login", userController.login);
-
+publicRouter.get("/api/users/isexist", userController.isUserExist);
 export { publicRouter };

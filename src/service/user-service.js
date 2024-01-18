@@ -34,6 +34,17 @@ const register = async (request) => {
   });
 };
 
+const isUserExist = async (username) => {
+  const isExist = await prismaClient.user.count({
+    where: {
+      username: username,
+    },
+  });
+  if (isExist > 0) return true;
+
+  return false;
+};
+
 const login = async (request) => {
   const cookies = request.cookies;
 
@@ -154,4 +165,4 @@ const findUser = async (search) => {
   return users;
 };
 
-export default { register, login, refresh, findUser, get };
+export default { register, login, refresh, findUser, get, isUserExist };
