@@ -3,7 +3,6 @@ import cors from "cors";
 import { publicRouter } from "../route/public-api.js";
 import { errorMiddleware } from "../middleware/error-middleware.js";
 import { userRouter } from "../route/api.js";
-import allowedOrigins from "../config/allowed-origins.js";
 import { credentials } from "../middleware/credential-middleware.js";
 import { corsOptions } from "../config/cors-options.js";
 
