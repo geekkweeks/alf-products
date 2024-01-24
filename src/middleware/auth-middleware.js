@@ -29,7 +29,7 @@ const authMiddleware = async (req, res, next) => {
         },
       });
 
-      if (!user) res.status(401).json({ errors: "Invalid token" });
+      if (!user) res.status(401).json({ errors: "Invalid token" }).end();
       else next();
     }
   } catch (err) {

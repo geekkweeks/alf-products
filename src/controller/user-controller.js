@@ -1,4 +1,3 @@
-import { Console, error } from "console";
 import userService from "../service/user-service.js";
 
 const register = async (req, res, next) => {

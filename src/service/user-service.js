@@ -30,6 +30,7 @@ const register = async (request) => {
     select: {
       username: true,
       name: true,
+      role: true,
     },
   });
 };
