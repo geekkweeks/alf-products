@@ -51,7 +51,6 @@ const get = async (req, res, next) => {
 
 const isUserExist = async (req, res, next) => {
   try {
-    console.log("query: ", req.query);
     const paramValue = req.param("username");
     if (!paramValue) throw new Error("Invalid param");
 
